@@ -16,6 +16,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
+######################### Database Models #########################
+
 class Comments(db.Model):
     """Setting the table name and
     creating columns for various fields"""
@@ -47,17 +49,18 @@ class User(db.Model):
         self.email = email
         self.password = password
 
-@app.route('/')
+
+################### Flask Routes ################################
+
+@app.route('/show')
 def show_all():
     """The default route for the app. Displays the list of
     already entered the comments"""
     return render_template('show_all.html',
        comments=Comments.query.order_by(Comments.pub_date.desc()).all())
 
-
 @app.route('/new', methods=['GET', 'POST'])
 def new():
-
     if request.method == 'POST':
         # The request is POST with some data, get POST data and validate it.
         # The form data is available in request.form dictionary.
@@ -105,10 +108,11 @@ def signup():
 
         flash('User is successfully created')
 
-        return redirect(url_for('show_all'))
+        return redirect(url_for('login'))
 
     return render_template('signup.html')
 
+@app.route("/")
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
